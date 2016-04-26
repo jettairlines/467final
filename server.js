@@ -1,12 +1,27 @@
 #!/bin/env node
 //  OpenShift sample Node application
-var express = require('express');
-var fs      = require('fs');
+var express     = require('express');
+var fs          = require('fs');
+var flickrapi   = require('flickrapi');
 
+
+
+var Flickr = require("flickrapi"),
+    flickrOptions = {
+      api_key: "9764e32563e3f4fa44b62976d85b61d1",
+      secret: "5080e28bbcbf57d6"
+    };
+
+var flickFun    = require('./flickrFun.js')(Flickr, flickrOptions); 
+
+//Maax of 500 pages at once, but if we need more let me know
+//flickFun.searchFlickr({"text":"love", "per_page":"10"}, function(){console.log("done");});
 
 /**
  *  Define the sample application.
  */
+
+
 var SampleApp = function() {
 
     //  Scope.
@@ -113,12 +128,28 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         self.createRoutes();
-        self.app = express.createServer();
+        self.app = express();
+        self.app.use(express.static('public'));
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
+            //self.app.get(r, self.routes[r]);
         }
+
+        self.app.get("/", function (res, req){
+            req.sendFile(__dirname+"/index.html")
+        })
+
+        self.app.get("/search", function (res, req){
+            var query = res.query.query
+            flickFun.searchFlickr({"text":query, "per_page":"75"}, 
+                function(ret){
+                    ret = ret || "Emptiness"
+                    req.send(ret);
+                }
+            );
+            //req.send("working on it");
+        })
     };
 
 
