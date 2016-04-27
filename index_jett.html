@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+  margin: 0;
+  padding: 0; }
+
+        .treemap .node {
+          font-size: 250%;
+          line-height: 150%;
+          overflow: hidden;
+          position: absolute;
+          text-indent: 1%;
+          transition: background 1s;
+          transition: color 0.5s; }
+          .treemap .node:hover {
+            color: white; }
+
+        .top {
+          height: 8vh;
+          background: #FFFFFF;
+          padding: 0 5%;
+          box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.1);
+          display: flex;
+          justify-content: space-between;
+          align-items: center; }
+          .top input {
+            width: 80%;
+            padding: 0; }
+          .top .right {
+            display: flex; }
+          .top a {
+            display: block;
+            height: 5vh;
+            width: 5vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            transition: all 0.1s ease; }
+            .top a svg {
+              height: 3vh; }
+            .top a .active, .top a:hover {
+              background-color: lightgrey; }
+
+        .treemap {
+          position: relative;
+          height: 92vh; }
+
+    </style>
+<!--      <link rel= "stylesheet" type= "text/css" href="css/style.css">-->
+</head>
+
+
+<body>
+    <div class="top">
+        <input type="search" name="search" placeholder="search..." />
+        <div class="right">
+            <a id="map"><svg width="74px" height="74px" viewBox="0 0 74 74" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M70.351,1 L3.361,1 C2.06,1 1,2.06 1,3.361 L1,70.35 C1,71.652 2.06,72.711 3.361,72.711 L70.35,72.711 C71.652,72.711 72.711,71.651 72.711,70.35 L72.711,3.361 C72.712,2.06 71.653,1 70.351,1 L70.351,1 Z M70.611,3.361 L70.611,18.402 L37.907,18.402 L37.907,3.102 L70.351,3.102 C70.494,3.102 70.611,3.218 70.611,3.361 L70.611,3.361 Z M53.208,70.611 L37.907,70.611 L37.907,37.907 L37.907,35.805 L37.907,20.717 L53.208,20.717 L53.208,53.452 L53.208,70.611 L53.208,70.611 Z M55.31,20.505 L70.611,20.505 L70.611,53.453 L55.31,53.453 L55.31,20.505 L55.31,20.505 Z M3.361,3.102 L35.805,3.102 L35.805,18.616 L35.805,20.505 L35.805,35.806 L3.102,35.806 L3.102,3.361 C3.102,3.218 3.218,3.102 3.361,3.102 L3.361,3.102 Z M3.102,70.351 L3.102,37.907 L35.806,37.907 L35.806,70.61 L3.361,70.61 C3.218,70.611 3.102,70.494 3.102,70.351 L3.102,70.351 Z M70.351,70.611 L55.31,70.611 L55.31,55.554 L70.611,55.554 L70.611,70.351 C70.611,70.494 70.494,70.611 70.351,70.611 L70.351,70.611 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-1" y="-1" width="73.7110007" height="73.711">
+            <rect x="0" y="0" width="73.7110007" height="73.711" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Shape">
+            <use fill="#000000" fill-rule="evenodd" xlink:href="#path-1"></use>
+            <use stroke="#000000" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+        </g>
+    </g>
+</svg></a>
+            <a id="bar"><svg width="48px" height="46px" viewBox="0 0 48 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" stroke="#000000" fill="#231F20">
+            <path d="M12.7,45.4 L1.5,45.4 C0.9,45.4 0.5,45 0.5,44.4 L0.5,15.7 C0.5,15.1 0.9,14.7 1.5,14.7 L12.7,14.7 C13.3,14.7 13.7,15.1 13.7,15.7 L13.7,44.4 C13.7,45 13.3,45.4 12.7,45.4 L12.7,45.4 Z M2.5,43.4 L11.7,43.4 L11.7,16.7 L2.5,16.7 L2.5,43.4 L2.5,43.4 Z" id="Shape"></path>
+            <path d="M24,45.4 L12.7,45.4 C12.1,45.4 11.7,45 11.7,44.4 L11.7,26.3 C11.7,25.7 12.1,25.3 12.7,25.3 L24,25.3 C24.6,25.3 25,25.7 25,26.3 L25,44.4 C25,45 24.5,45.4 24,45.4 L24,45.4 Z M13.7,43.4 L23,43.4 L23,27.3 L13.8,27.3 L13.8,43.4 L13.7,43.4 Z" id="Shape"></path>
+            <path d="M35.2,45.4 L24,45.4 C23.4,45.4 23,45 23,44.4 L23,1.6 C23,1 23.4,0.6 24,0.6 L35.2,0.6 C35.8,0.6 36.2,1 36.2,1.6 L36.2,44.5 C36.2,45 35.7,45.4 35.2,45.4 L35.2,45.4 Z M25,43.4 L34.2,43.4 L34.2,2.6 L25,2.6 L25,43.4 L25,43.4 Z" id="Shape"></path>
+            <path d="M46.5,45.4 L35.3,45.4 C34.7,45.4 34.3,45 34.3,44.4 L34.3,7.7 C34.3,7.1 34.7,6.7 35.3,6.7 L46.5,6.7 C47.1,6.7 47.5,7.1 47.5,7.7 L47.5,44.4 C47.5,45 47.1,45.4 46.5,45.4 L46.5,45.4 Z M36.3,43.4 L45.5,43.4 L45.5,8.7 L36.3,8.7 L36.3,43.4 L36.3,43.4 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg></a>
+        </div>
+    </div>
+    <div class="treemap"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <script>
+        $(".right:nth-child(2)").bind('click',drawTreemap);
+//        drawBar();
+        
+        var data = {
+          "name": "cluster",
+          "children": [
+            { "name": "Google", "value": 80 },
+            { "name": "Microsoft", "value": 10 },
+            { "name": "Oracle", "value": 10 },
+          ]
+        };
+        
+        function drawBar(){
+            var margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+            
+            var x = d3.scale.ordinal()
+                .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                .range([height, 0]);
+
+            var svg = d3.select("view").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+              /*x.domain(data.map(function(d) { return d.letter; }));
+              y.domain([0, d3.max(data, function(d) { return d.frequency; })]);*/
+            
+            d3.json(data, function(data) {
+              console.log(data);
+            });
+
+              svg.selectAll(".bar")
+                  .data(data)
+                .enter().append("rect")
+                  .attr("class", "bar")
+                  .attr("x", function(d) { return x(d.letter); })
+                  .attr("width", x.rangeBand())
+                  .attr("y", function(d) { return y(d.frequency); })
+                  .attr("height", function(d) { return height - y(d.frequency); });
+ 
+            function type(d) {
+              d.frequency = +d.frequency;
+              return d;
+            }
+        }
+        
+        function drawTreemap(){
+            //http://codepen.io/WhatIsHeDoing/pen/tnKil
+
+            // THIS IS WHERE COLOR IS
+            var color = d3.scale.category20c();
+
+            var treemap =
+              d3.layout.treemap()
+              // use 100 x 100 px, which we'll apply as % later
+              .size([100, 100])
+              .sticky(true)
+              .value(function(d) { return d.value; });
+
+            var div = d3.select(".treemap");
+            $("#map").addClass("active");
+
+            function position() {
+              this
+                .style("left", function(d) { return d.x + "%"; })
+                .style("top", function(d) { return d.y + "%"; })
+                .style("width", function(d) { return d.dx + "%"; })
+                .style("height", function(d) { return d.dy + "%"; });
+            }
+
+            function getLabel(d) {
+              return d.name;
+            }
+
+            var node =
+              div.datum(data).selectAll(".node")
+              .data(treemap.nodes)
+              .enter().append("div")
+              .attr("class", "node")
+              .call(position)
+              .style("background", function(d) { return color(getLabel(d)); })
+              .text(getLabel);
+        }
+    </script>
+    
+</body>
+    
+</html>
