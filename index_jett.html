@@ -5,52 +5,66 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-  margin: 0;
-  padding: 0; }
+      body {
+      margin: 0;
+      padding: 0; }
 
-        .treemap .node {
-          font-size: 250%;
-          line-height: 150%;
-          overflow: hidden;
-          position: absolute;
-          text-indent: 1%;
-          transition: background 1s;
-          transition: color 0.5s; }
-          .treemap .node:hover {
-            color: white; }
+    .view .node {
+      font-size: 250%;
+      line-height: 150%;
+      overflow: hidden;
+      position: absolute;
+      text-indent: 1%;
+      transition: background 1s;
+      transition: color 0.5s; }
+      .view .node:hover {
+        color: white; }
 
-        .top {
-          height: 8vh;
-          background: #FFFFFF;
-          padding: 0 5%;
-          box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.1);
-          display: flex;
-          justify-content: space-between;
-          align-items: center; }
-          .top input {
-            width: 80%;
-            padding: 0; }
-          .top .right {
-            display: flex; }
-          .top a {
-            display: block;
-            height: 5vh;
-            width: 5vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 2px;
-            transition: all 0.1s ease; }
-            .top a svg {
-              height: 3vh; }
-            .top a .active, .top a:hover {
-              background-color: lightgrey; }
+    .top {
+      height: 8vh;
+      background: #FFFFFF;
+      padding: 0 5%;
+      box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center; }
+      .top input {
+        width: 80%;
+        padding: 0; }
+      .top .right {
+        display: flex; }
+      .top a {
+        display: block;
+        height: 5vh;
+        width: 5vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 2px;
+        transition: all 0.1s ease; }
+        .top a svg {
+          height: 3vh; }
+        .top a .active, .top a:hover {
+          background-color: lightgrey; }
 
-        .treemap {
-          position: relative;
-          height: 92vh; }
+    .view {
+      position: relative;
+      height: 92vh;
+      overflow: scroll;
+      display: flex;
+      align-items: center; }
 
+    .axis {
+      font: 10px sans-serif; }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges; }
+
+    .x.axis path {
+      display: none; }
     </style>
 <!--      <link rel= "stylesheet" type= "text/css" href="css/style.css">-->
 </head>
@@ -88,28 +102,30 @@
 </svg></a>
         </div>
     </div>
-    <div class="treemap"></div>
+    <div class="view"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    
+<!--
+    <script>
+        var datas = [
+            { "name": "Google", "value": 80, "color": "#ffa" },
+            { "name": "Microsoft", "value": 20, "color": "#cab" },
+            { "name": "Oracle", "value": 10, "color":"#8da" },
+          ]
+    </script>
+-->
 
     <script>
-        $(".right:nth-child(2)").bind('click',drawTreemap);
-//        drawBar();
-        
-        var data = {
-          "name": "cluster",
-          "children": [
-            { "name": "Google", "value": 80 },
-            { "name": "Microsoft", "value": 10 },
-            { "name": "Oracle", "value": 10 },
-          ]
-        };
-        
+        $("#map").bind('click',drawTreemap);
+        $("#bar").bind('click',drawBar);
+
         function drawBar(){
-            var margin = {top: 20, right: 20, bottom: 30, left: 40},
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+            //referenced from https://bl.ocks.org/zanarmstrong/dc73d339a0f921d638ac
+            $('.view').html('');
+            width = 16*datas.length,
+            height = $('body').height()*.80;
             
             var x = d3.scale.ordinal()
                 .rangeRoundBands([0, width], .1);
@@ -117,40 +133,39 @@
             var y = d3.scale.linear()
                 .range([height, 0]);
 
-            var svg = d3.select("view").append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-              /*x.domain(data.map(function(d) { return d.letter; }));
-              y.domain([0, d3.max(data, function(d) { return d.frequency; })]);*/
+            var svg = d3.select(".view").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g");
             
-            d3.json(data, function(data) {
-              console.log(data);
-            });
+              x.domain(datas.map(function(d) { return d.name; }));
+              y.domain([0, d3.max(datas, function(d) { return d.value; })]);
 
               svg.selectAll(".bar")
-                  .data(data)
+                  .data(datas)
                 .enter().append("rect")
                   .attr("class", "bar")
-                  .attr("x", function(d) { return x(d.letter); })
-                  .attr("width", x.rangeBand())
-                  .attr("y", function(d) { return y(d.frequency); })
-                  .attr("height", function(d) { return height - y(d.frequency); });
+                  .attr("x", function(d) { return x(d.name); })
+                  .attr("width", 16 )
+                  .attr("y", function(d) { return y(d.value); })
+                  .attr("height", function(d) { return height - y(d.value); })
+                  .attr("fill",function(d) { return d.color; });
  
             function type(d) {
-              d.frequency = +d.frequency;
+              d.value = +d.value;
               return d;
             }
         }
         
         function drawTreemap(){
-            //http://codepen.io/WhatIsHeDoing/pen/tnKil
-
-            // THIS IS WHERE COLOR IS
-            var color = d3.scale.category20c();
-
+            var datas_wrapper = {
+                "name": "map",
+                "children": datas
+            }
+            
+            
+            $('.view').html('');
+            //referenced from http://codepen.io/WhatIsHeDoing/pen/tnKil
             var treemap =
               d3.layout.treemap()
               // use 100 x 100 px, which we'll apply as % later
@@ -158,8 +173,7 @@
               .sticky(true)
               .value(function(d) { return d.value; });
 
-            var div = d3.select(".treemap");
-            $("#map").addClass("active");
+            var div = d3.select(".view");
 
             function position() {
               this
@@ -169,18 +183,13 @@
                 .style("height", function(d) { return d.dy + "%"; });
             }
 
-            function getLabel(d) {
-              return d.name;
-            }
-
-            var node =
-              div.datum(data).selectAll(".node")
-              .data(treemap.nodes)
+            d3.select(".view").datum(datas_wrapper).selectAll(".node")
+            .data(treemap.nodes)
               .enter().append("div")
               .attr("class", "node")
               .call(position)
-              .style("background", function(d) { return color(getLabel(d)); })
-              .text(getLabel);
+            .style("background", function(d) { return d.color; })
+              .text(function(d){return d.name});
         }
     </script>
     
